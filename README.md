@@ -32,15 +32,25 @@ was already plugged when you started the test).
 
 Requires macOS 13+ and the Xcode command-line tools.
 
+The `scripts/` helpers wrap everything for local use:
+
 ```sh
-swift build -c release
-.build/release/ChargeNow
+scripts/build.sh                  # release build (native arch)
+scripts/build.sh debug            # debug build
+scripts/build.sh --universal      # universal arm64 + x86_64 (needs full Xcode)
+
+scripts/run.sh                    # build (debug) + run in the foreground, Ctrl-C to quit
+scripts/run.sh release --test     # any extra args go to the app (--test fires a demo alarm)
+
+scripts/package-app.sh            # dist/ChargeNow.app — double-clickable, ad-hoc signed
+scripts/package-app.sh --universal
 ```
 
-For a quick demo (fires the alarm ~0.5 s after launch):
+Or plain SwiftPM:
 
 ```sh
-.build/release/ChargeNow --test
+swift build -c release
+.build/release/ChargeNow          # add --test for a ~0.5 s delayed demo alarm
 ```
 
 ## How it works
