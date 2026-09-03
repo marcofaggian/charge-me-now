@@ -52,7 +52,7 @@ dist/                  gitignored output
 
 - No code comments unless asked; log lines use the `[ChargeMeNow]` prefix via `print`.
 - Icon layout is verified by pixel analysis, not screenshots: compile `BatteryIcon.swift` together with a `main.swift` harness via `swiftc`, render levels to a PNG, sample with `NSBitmapImageRep.colorAt` (mind the 2× retina scale factor).
-- macOS-version API traps observed in this codebase: `IOPSCopyTimeRemainingEstimate` → `IOPSGetTimeRemainingEstimate`; `MaxCapacity` is percentage-like (use `AppleRawMaxCapacity` for mAh); `pmset -g lpm` unsupported (parse `lowpowermode` from full `pmset -g`); `xcrun notarytool staple` → `xcrun stapler staple`.
+- macOS-version API traps observed in this codebase: `IOPSCopyTimeRemainingEstimate` → `IOPSGetTimeRemainingEstimate` (returns **seconds**, not minutes as its doc abstract claims); `MaxCapacity` is percentage-like (use `AppleRawMaxCapacity` for mAh); `pmset -g lpm` unsupported (parse `lowpowermode` from full `pmset -g`); `xcrun notarytool staple` → `xcrun stapler staple`.
 - MediaRemote symbols are `dlsym`'d (no linkage); never call getters beyond `MRMediaRemoteSendCommand` — other signatures changed on modern macOS and segfault.
 - Naming: bundle/executable `ChargeMeNow`, display name "Charge Me Now", bundle ID `com.marcosoft.chargemenow`.
 - Signing identity: `Developer ID Application: Marco Faggian (Y8R6G46AQ6)`; notary keychain profile `notary`.

@@ -6,6 +6,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var titleField: NSTextField?
     private var statusField: NSTextField?
     private var healthItem: NSMenuItem?
+    private var capacityItem: NSMenuItem?
     private var cyclesItem: NSMenuItem?
     private var manufactureItem: NSMenuItem?
     private var energySeparator: NSMenuItem?
@@ -54,7 +55,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // right-aligned on the far end. View-based so the percentage renders
         // in full color (disabled menu items would be drawn dimmed gray) and
         // never highlights. The wide view defines the menu width.
-        let headerView = NSView(frame: NSRect(x: 0, y: 0, width: 240, height: 38))
+        let headerView = NSView(frame: NSRect(x: 0, y: 0, width: 200, height: 38))
         let field = NSTextField(labelWithString: "…")
         field.font = NSFont.systemFont(ofSize: 15, weight: .semibold)
         field.textColor = .labelColor
@@ -66,7 +67,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         status.font = NSFont.systemFont(ofSize: 12)
         status.textColor = .secondaryLabelColor
         status.alignment = .right
-        status.frame = NSRect(x: 93, y: 5, width: 132, height: 18)
+        status.frame = NSRect(x: 73, y: 5, width: 132, height: 18)
         headerView.addSubview(status)
         statusField = status
 
@@ -81,6 +82,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         health.isHidden = true
         menu.addItem(health)
         healthItem = health
+
+        let capacity = NSMenuItem(title: "…", action: nil, keyEquivalent: "")
+        capacity.isEnabled = false
+        capacity.isHidden = true
+        menu.addItem(capacity)
+        capacityItem = capacity
 
         let cycles = NSMenuItem(title: "…", action: nil, keyEquivalent: "")
         cycles.isEnabled = false
@@ -159,12 +166,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let header = state.present ? "\(state.percent)%" : "Charge Me Now"
         titleField?.stringValue = header
         statusField?.stringValue = state.present ? subtitleText(for: state) : ""
+        // Fit the status field to its text and keep it pinned to the right
+        // edge so long strings can never outsize the rest of the menu.
+        if let status = statusField, let header = headerView {
+            status.sizeToFit()
+            status.frame.origin = NSPoint(x: header.frame.width - 15 - status.frame.width, y: 5)
+        }
 
         let showHealth = state.present && state.health != nil
         healthItem?.isHidden = !showHealth
+        capacityItem?.isHidden = !showHealth
         cyclesItem?.isHidden = !showHealth
         if let health = state.health {
-            healthItem?.title = "Battery Health: \(String(format: "%.1f", health.healthPercent))% (\(health.maxCapacity)/\(health.designCapacity) mAh)"
+            healthItem?.title = "Battery Health: \(String(format: "%.1f", health.healthPercent))%"
+            capacityItem?.title = "Capacity: \(health.maxCapacity)/\(health.designCapacity) mAh"
+            capacityItem?.toolTip = "Full charge \(health.maxCapacity) mAh of \(health.designCapacity) mAh design capacity"
             if health.designCycleCount > 0 {
                 cyclesItem?.title = "Cycles: \(health.cycleCount)/\(health.designCycleCount)"
             } else {
@@ -206,9 +222,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             return state.percent >= 100 ? "Fully charged" : "Power adapter"
         }
         if state.minutesRemaining >= 0 {
-            return "\(timeRemaining(minutes: state.minutesRemaining)) remaining"
+            return timeRemaining(minutes: state.minutesRemaining)
         }
-        return "Estimating time remaining…"
+        return "Estimating…"
     }
 
     /// Humanized duration: "42m", "5h 55m", "2h", "18d 6h".

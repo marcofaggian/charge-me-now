@@ -51,8 +51,8 @@ final class BatteryMonitor {
     }
 
     private static func read() -> BatteryInfo {
-        let estimate = IOPSGetTimeRemainingEstimate()
-        let minutes = (estimate.isFinite && estimate >= 0) ? Int(estimate.rounded()) : -1
+        let estimate = IOPSGetTimeRemainingEstimate() // CFTimeInterval = SECONDS, despite the doc abstract saying "minutes"
+        let minutes = (estimate.isFinite && estimate >= 0) ? Int((estimate / 60).rounded()) : -1
         let registry = smartBatteryDictionary()
         if cachedHealth == nil {
             cachedHealth = readHealth(from: registry)
