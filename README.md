@@ -17,6 +17,22 @@ When the battery hits **2 % or less** and you're not plugged in, it:
 It **resets automatically** the moment you plug in the charger (or the level
 recovers to ≥ 5 % — a small hysteresis so it doesn't flap).
 
+## Install
+
+**Homebrew** (recommended):
+
+```sh
+brew install --cask marcofaggian/tap/charge-me-now
+```
+
+**Direct download** — grab `ChargeMeNow.zip` from the
+[latest release](https://github.com/marcofaggian/charge-me-now/releases/latest),
+unzip, and drop `ChargeMeNow.app` into `/Applications`.
+
+The release build is universal (arm64 + x86_64), Developer ID signed,
+notarized and stapled — Gatekeeper accepts it out of the box. Requires
+macOS 13+.
+
 ## Menu bar
 
 The app lives in the menu bar with a **custom battery SoC icon + percentage**:
