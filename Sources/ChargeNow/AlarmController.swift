@@ -9,6 +9,7 @@ final class AlarmController {
         var charging: Bool
         var plugged: Bool
         var minutesRemaining: Int
+        var watts: Double?
         var health: BatteryHealth?
         var alarmActive: Bool
         var testing: Bool
@@ -34,6 +35,7 @@ final class AlarmController {
               charging: info.charging,
               plugged: info.plugged,
               minutesRemaining: info.minutesRemaining,
+              watts: info.watts,
               health: info.health,
               alarmActive: alarmActive,
               testing: testing)

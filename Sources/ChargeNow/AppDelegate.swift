@@ -7,6 +7,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusField: NSTextField?
     private var healthItem: NSMenuItem?
     private var cyclesItem: NSMenuItem?
+    private var manufactureItem: NSMenuItem?
     private var energySeparator: NSMenuItem?
     private var energyHeader: NSMenuItem?
     private var energyAppItems: [NSMenuItem] = []
@@ -86,6 +87,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(cycles)
         cyclesItem = cycles
 
+        let manufactured = NSMenuItem(title: "…", action: nil, keyEquivalent: "")
+        manufactured.isEnabled = false
+        manufactured.isHidden = true
+        menu.addItem(manufactured)
+        manufactureItem = manufactured
+
         // Apps Using Significant Energy (hidden while the list is empty).
         let energySep = NSMenuItem.separator()
         menu.addItem(energySep)
@@ -162,6 +169,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             } else {
                 cyclesItem?.title = "Cycles: \(health.cycleCount)"
             }
+            if let date = health.manufactureDate {
+                manufactureItem?.isHidden = false
+                manufactureItem?.title = "Manufactured: \(date)"
+            } else {
+                manufactureItem?.isHidden = true
+            }
         }
 
         let button = statusItem?.button
@@ -183,7 +196,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func subtitleText(for state: AlarmController.State) -> String {
         if state.plugged {
-            if state.charging { return "Charging" }
+            if state.charging {
+                if let watts = state.watts, watts > 0 {
+                    return String(format: "Charging (%.0f W)", watts)
+                }
+                return "Charging"
+            }
             return state.percent >= 100 ? "Fully charged" : "Power adapter"
         }
         if state.minutesRemaining >= 0 {
