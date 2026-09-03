@@ -10,7 +10,16 @@ import Cocoa
 enum BatteryIcon {
     static let canvas = NSSize(width: 24, height: 20)
 
+    private static var cache: [String: NSImage] = [:]
+
     static func image(percent: Int, charging: Bool) -> NSImage {
+        let fraction = fillFraction(for: percent)
+        let isDark = NSApp?.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua, .vibrantDark]) == .darkAqua
+        let key = "\(Int((fraction * 100).rounded()))-\(charging)-\(isDark)"
+        if let cached = cache[key] {
+            return cached
+        }
+
         // Adapt the outline to light/dark menu bars.
         let outline = NSColor(name: nil) { appearance in
             if appearance.bestMatch(from: [.aqua, .darkAqua, .vibrantDark]) == .darkAqua {
@@ -26,6 +35,7 @@ enum BatteryIcon {
                     outline: outline)
         image.unlockFocus()
         image.isTemplate = false
+        cache[key] = image
         return image
     }
 

@@ -16,21 +16,26 @@ final class EnergyMonitor {
     var onUpdate: (([EnergyApp]) -> Void)?
 
     private var timer: Timer?
+    private var sampling = false
 
     func start() {
         refresh()
         timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
             self?.refresh()
         }
+        timer?.tolerance = 5 // allow coalescing
     }
 
     func refresh() {
+        guard !sampling else { return } // don't stack top(1) runs
+        sampling = true
         // NSWorkspace must be touched on the main thread.
         let appNameTable = Self.runningAppNameTable()
         DispatchQueue.global(qos: .utility).async { [weak self] in
             let apps = Self.sampleSignificantApps(appNameTable: appNameTable)
             DispatchQueue.main.async {
                 guard let self else { return }
+                self.sampling = false
                 guard self.significantApps != apps else { return }
                 self.significantApps = apps
                 let detail = apps.map { String(format: "%@ (%.0f, %.0f%%)", $0.name, $0.power, $0.share * 100) }.joined(separator: ", ")

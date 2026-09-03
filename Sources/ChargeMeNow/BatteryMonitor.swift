@@ -42,6 +42,7 @@ final class BatteryMonitor {
         timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
             self?.poll()
         }
+        timer?.tolerance = 1 // allow coalescing
         poll()
     }
 
@@ -53,6 +54,9 @@ final class BatteryMonitor {
         let estimate = IOPSGetTimeRemainingEstimate()
         let minutes = (estimate.isFinite && estimate >= 0) ? Int(estimate.rounded()) : -1
         let registry = smartBatteryDictionary()
+        if cachedHealth == nil {
+            cachedHealth = readHealth(from: registry)
+        }
 
         guard let blob = IOPSCopyPowerSourcesInfo()?.takeRetainedValue(),
               let sources = IOPSCopyPowerSourcesList(blob)?.takeRetainedValue() as? [CFTypeRef] else {
@@ -72,11 +76,14 @@ final class BatteryMonitor {
                 plugged: powerSource == "AC Power", // kIOPSACPowerKey
                 minutesRemaining: minutes,
                 watts: Self.readWatts(from: registry),
-                health: Self.readHealth(from: registry)
+                health: Self.cachedHealth
             )
         }
         return BatteryInfo()
     }
+
+    /// Health changes ~never (cycles increment over months); parse once.
+    private static var cachedHealth: BatteryHealth?
 
     /// The AppleSmartBattery IORegistry entry, shared by health + wattage.
     private static func smartBatteryDictionary() -> [String: Any]? {

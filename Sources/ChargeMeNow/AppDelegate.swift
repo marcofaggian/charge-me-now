@@ -11,6 +11,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var energySeparator: NSMenuItem?
     private var energyHeader: NSMenuItem?
     private var energyAppItems: [NSMenuItem] = []
+    private var lastEnergyRenderKey: String?
     private var lowPowerItem: NSMenuItem?
     private var showPercentageItem: NSMenuItem?
     private var stopAlarmItem: NSMenuItem?
@@ -233,6 +234,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
               let header = energyHeader,
               let separator = energySeparator else { return }
         let apps = energy.significantApps
+
+        // Rebuilding on every battery poll is churn — skip when neither the
+        // app list nor the values feeding the impact annotations changed.
+        let renderKey = "\(apps.map { "\($0.name):\($0.power):\($0.share)" })|\(lastState?.plugged ?? false)|\(lastState?.minutesRemaining ?? -1)"
+        guard renderKey != lastEnergyRenderKey else { return }
+        lastEnergyRenderKey = renderKey
 
         separator.isHidden = apps.isEmpty
         header.isHidden = apps.isEmpty
