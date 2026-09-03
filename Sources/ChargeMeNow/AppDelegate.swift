@@ -206,9 +206,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             return state.percent >= 100 ? "Fully charged" : "Power adapter"
         }
         if state.minutesRemaining >= 0 {
-            return String(format: "%d:%02d remaining", state.minutesRemaining / 60, state.minutesRemaining % 60)
+            return "\(timeRemaining(minutes: state.minutesRemaining)) remaining"
         }
         return "Estimating time remaining…"
+    }
+
+    /// Humanized duration: "42m", "5h 55m", "2h", "18d 6h".
+    private func timeRemaining(minutes: Int) -> String {
+        let days = minutes / 1440
+        let hours = (minutes % 1440) / 60
+        let remainder = minutes % 60
+        if days >= 1 {
+            return hours > 0 ? "\(days)d \(hours)h" : "\(days)d"
+        }
+        if hours >= 1 {
+            return remainder > 0 ? "\(hours)h \(remainder)m" : "\(hours)h"
+        }
+        return "\(remainder)m"
     }
 
     /// Impact annotation for an energy row. On battery: estimated extra
