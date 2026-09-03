@@ -19,11 +19,44 @@ recovers to ≥ 5 % — a small hysteresis so it doesn't flap).
 
 ## Menu bar
 
-The app lives as a ⚡ bolt icon in the menu bar:
+The app lives in the menu bar with a **custom battery SoC icon + percentage**:
 
-- **Battery: N % (on battery / charging)** — live status
-- **Trigger Alarm (Test)** — fires the full alarm manually (`⌘T` while the menu is open); becomes **Stop Alarm** while active
-- **Quit Charge Now** — closes the app
+- fill advances in **10 % increments** (rounded to the nearest 10 %)
+- fill is drawn over the bezel, hiding the border under the color —
+  a full battery reads as one solid green shape
+- `< 10 %` → red fill while discharging; green at any level while charging
+- charging → white bolt overlay (dark halo) that extends past the battery's
+  top and bottom edges
+- unfilled bezel strokes are drawn at 50 % transparency
+
+The icon is drawn with CoreGraphics (`BatteryIcon.swift`) and adapts its
+outline to light/dark menu bars. Menu contents:
+
+- bold percentage header with time-remaining / charging subtitle
+- **Battery Health: N % (max/design mAh)** and **Cycles: n / m** — read
+  straight from the `AppleSmartBattery` IORegistry entry (same source as
+  CoconutBattery); hidden on Macs without a battery
+- **Apps Using Significant Energy** (section, only when non-empty)
+- **Low Power Mode** — checkbox toggling the real system setting via
+  `pmset`. Toggling needs admin rights, so macOS will prompt for your
+  password the first time; the checkbox refreshes every time the menu
+  opens. Hidden on Macs that don't support it.
+- **Show Percentage** — toggles the `N%` next to the battery icon
+  (remembered across launches).
+- **Stop Alarm** — appears only while the alarm is active.
+- **Quit Charge Now** — closes the app.
+
+The menu mirrors the system battery layout: a bold percentage header with a
+time-remaining / charging subtitle, followed by an **Apps Using Significant
+Energy** section when applicable. Each row is annotated with its estimated
+battery impact: **−N min** (extra runtime you'd gain by quitting it, derived
+from the current time-remaining estimate and the app's share of sampled
+system load) on battery power, or **N% of load** while plugged in; hovering
+shows the raw `top` power score. The list is sampled every 60 s (and each
+time the menu opens) via `top`'s power column, and hot processes are mapped
+to friendly names of running GUI apps — helpers like
+`Chromium Helper (Renderer)` collapse to `Chromium`, and system daemons are
+filtered out.
 
 A manual test also resets when you plug the charger in mid-test (unless it
 was already plugged when you started the test).

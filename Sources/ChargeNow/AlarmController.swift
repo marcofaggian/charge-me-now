@@ -4,9 +4,12 @@ import Foundation
 /// and resets when the charger is connected (or the level recovers).
 final class AlarmController {
     struct State {
+        var present: Bool
         var percent: Int
         var charging: Bool
         var plugged: Bool
+        var minutesRemaining: Int
+        var health: BatteryHealth?
         var alarmActive: Bool
         var testing: Bool
     }
@@ -26,9 +29,12 @@ final class AlarmController {
     private var pluggedAtTrigger = false
 
     var state: State {
-        State(percent: info.percent,
+        State(present: info.present,
+              percent: info.percent,
               charging: info.charging,
               plugged: info.plugged,
+              minutesRemaining: info.minutesRemaining,
+              health: info.health,
               alarmActive: alarmActive,
               testing: testing)
     }
