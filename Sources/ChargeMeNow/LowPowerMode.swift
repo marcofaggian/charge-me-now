@@ -27,7 +27,7 @@ enum LowPowerMode {
         var error: NSDictionary?
         script.executeAndReturnError(&error)
         if let error {
-            print("[ChargeNow] Low Power Mode toggle failed: \(error[NSAppleScript.errorNumber] ?? "unknown error")")
+            print("[ChargeMeNow] Low Power Mode toggle failed: \(error[NSAppleScript.errorNumber] ?? "unknown error")")
             return false
         }
         return true

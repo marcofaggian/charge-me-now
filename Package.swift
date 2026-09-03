@@ -2,12 +2,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "ChargeNow",
+    name: "ChargeMeNow",
     platforms: [.macOS(.v13)],
     targets: [
         .executableTarget(
-            name: "ChargeNow",
-            path: "Sources/ChargeNow"
+            name: "ChargeMeNow",
+            path: "Sources/ChargeMeNow"
         )
     ]
 )

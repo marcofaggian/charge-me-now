@@ -1,4 +1,4 @@
-# Charge Now!
+# Charge Me Now!
 
 A tiny macOS menu-bar (tray) app that screams at you when your battery is about to die.
 
@@ -44,7 +44,7 @@ outline to light/dark menu bars. Menu contents:
 - **Show Percentage** — toggles the `N%` next to the battery icon
   (remembered across launches).
 - **Stop Alarm** — appears only while the alarm is active.
-- **Quit Charge Now** — closes the app.
+- **Quit Charge Me Now** — closes the app.
 
 The menu mirrors the system battery layout: a bold percentage header with a
 time-remaining / charging subtitle, followed by an **Apps Using Significant
@@ -75,7 +75,7 @@ scripts/build.sh --universal      # universal arm64 + x86_64 (needs full Xcode)
 scripts/run.sh                    # build (debug) + run in the foreground, Ctrl-C to quit
 scripts/run.sh release --test     # any extra args go to the app (--test fires a demo alarm)
 
-scripts/package-app.sh            # dist/ChargeNow.app — double-clickable, ad-hoc signed
+scripts/package-app.sh            # dist/ChargeMeNow.app — double-clickable, ad-hoc signed
 scripts/package-app.sh --universal
 ```
 
@@ -83,7 +83,7 @@ Or plain SwiftPM:
 
 ```sh
 swift build -c release
-.build/release/ChargeNow          # add --test for a ~0.5 s delayed demo alarm
+.build/release/ChargeMeNow          # add --test for a ~0.5 s delayed demo alarm
 ```
 
 ## How it works
@@ -102,5 +102,5 @@ swift build -c release
 - If `MediaRemote` is ever unavailable, it falls back to synthesizing the
   hardware play/pause media key, which may prompt for Accessibility
   permission.
-- Log lines are printed to stdout (`[ChargeNow] …`) if you run it from a
+- Log lines are printed to stdout (`[ChargeMeNow] …`) if you run it from a
   terminal.

@@ -124,7 +124,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         menu.addItem(.separator())
 
-        let quit = NSMenuItem(title: "Quit Charge Now", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        let quit = NSMenuItem(title: "Quit Charge Me Now", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         quit.target = NSApp
         menu.addItem(quit)
 
@@ -155,7 +155,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         lastState = state
         stopAlarmItem?.isHidden = !state.alarmActive
 
-        let header = state.present ? "\(state.percent)%" : "Charge Now"
+        let header = state.present ? "\(state.percent)%" : "Charge Me Now"
         titleField?.stringValue = header
         statusField?.stringValue = state.present ? subtitleText(for: state) : ""
 
@@ -179,7 +179,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         let button = statusItem?.button
         if !state.present {
-            button?.image = NSImage(systemSymbolName: "bolt.fill", accessibilityDescription: "Charge Now")
+            button?.image = NSImage(systemSymbolName: "bolt.fill", accessibilityDescription: "Charge Me Now")
             button?.title = ""
         } else {
             if state.alarmActive {
@@ -266,7 +266,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func toggleLowPowerMode(_ sender: NSMenuItem) {
         guard let current = LowPowerMode.currentState else { return }
         if LowPowerMode.setEnabled(!current) {
-            print("[ChargeNow] Low Power Mode \(!current ? "enabled" : "disabled")")
+            print("[ChargeMeNow] Low Power Mode \(!current ? "enabled" : "disabled")")
         }
         refreshLowPowerItem()
     }

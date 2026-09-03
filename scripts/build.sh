@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build ChargeNow locally.
+# Build ChargeMeNow locally.
 #
 # Usage:
 #   scripts/build.sh                # release build (native arch)
@@ -24,10 +24,10 @@ if [[ "$universal" == "true" ]]; then
     exit 1
   fi
   swift build -c release --arch arm64 --arch x86_64
-  bin="$(swift build -c release --arch arm64 --arch x86_64 --show-bin-path)/ChargeNow"
+  bin="$(swift build -c release --arch arm64 --arch x86_64 --show-bin-path)/ChargeMeNow"
 else
   swift build -c "$config"
-  bin="$(swift build -c "$config" --show-bin-path)/ChargeNow"
+  bin="$(swift build -c "$config" --show-bin-path)/ChargeMeNow"
 fi
 
 echo

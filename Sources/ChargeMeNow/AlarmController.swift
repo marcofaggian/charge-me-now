@@ -78,7 +78,7 @@ final class AlarmController {
         alarmActive = true
         testing = test
         pluggedAtTrigger = info.plugged
-        print("[ChargeNow] ALARM \(test ? "triggered (TEST)" : "triggered — battery \(info.percent)%")")
+        print("[ChargeMeNow] ALARM \(test ? "triggered (TEST)" : "triggered — battery \(info.percent)%")")
         media.pauseNowPlaying()
         media.startAlarm()
         overlay.show(testing: test)
@@ -92,7 +92,7 @@ final class AlarmController {
         }
         alarmActive = false
         testing = false
-        print("[ChargeNow] alarm reset (battery \(info.percent)%, \(info.plugged ? "plugged in" : "on battery"))")
+        print("[ChargeMeNow] alarm reset (battery \(info.percent)%, \(info.plugged ? "plugged in" : "on battery"))")
         media.stopAlarm()
         overlay.hide()
         onStateChange?(state)

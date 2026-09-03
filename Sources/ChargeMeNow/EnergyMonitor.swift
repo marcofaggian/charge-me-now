@@ -34,7 +34,7 @@ final class EnergyMonitor {
                 guard self.significantApps != apps else { return }
                 self.significantApps = apps
                 let detail = apps.map { String(format: "%@ (%.0f, %.0f%%)", $0.name, $0.power, $0.share * 100) }.joined(separator: ", ")
-                print("[ChargeNow] apps using significant energy: \(apps.isEmpty ? "none" : detail)")
+                print("[ChargeMeNow] apps using significant energy: \(apps.isEmpty ? "none" : detail)")
                 self.onUpdate?(apps)
             }
         }

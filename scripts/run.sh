@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Build and run ChargeNow in the foreground (Ctrl-C to quit).
-# stdout logging ([ChargeNow] ...) is visible in the terminal.
+# Build and run ChargeMeNow in the foreground (Ctrl-C to quit).
+# stdout logging ([ChargeMeNow] ...) is visible in the terminal.
 #
 # Usage:
 #   scripts/run.sh                  # debug build, run
@@ -20,5 +20,5 @@ done
 
 swift build -c "$config"
 
-echo "Running ChargeNow ($config). Ctrl-C to quit."
-exec ".build/$config/ChargeNow" ${args[@]+"${args[@]}"}
+echo "Running ChargeMeNow ($config). Ctrl-C to quit."
+exec ".build/$config/ChargeMeNow" ${args[@]+"${args[@]}"}
